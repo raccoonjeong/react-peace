@@ -8,25 +8,25 @@ const mockTodos = [
     id: 0,
     isDone: false,
     content: "React 공부하기",
-    createDate: new Date().getTime(),
+    createdDate: new Date().getTime(),
   },
   {
     id: 1,
     isDone: false,
     content: "점심 먹기",
-    createDate: new Date().getTime(),
+    createdDate: new Date().getTime(),
   },
   {
     id: 2,
     isDone: false,
     content: "운동하기",
-    createDate: new Date().getTime(),
+    createdDate: new Date().getTime(),
   },
   {
     id: 3,
     isDone: false,
     content: "저녁 먹기",
-    createDate: new Date().getTime(),
+    createdDate: new Date().getTime(),
   },
 ];
 function App() {
@@ -44,11 +44,28 @@ function App() {
     idRef.current += 1;
   };
 
+  const onUpdate = (targetId) => {
+    console.log("targetId", targetId);
+    setTodos(
+      todos.map((it) => {
+        return it.id === targetId
+          ? {
+              ...it,
+              isDone: !it.isDone,
+            }
+          : it;
+      })
+    );
+  };
+  const onDelete = (targetId) => {
+    setTodos(todos.filter((it) => it.id !== targetId));
+  };
+
   return (
     <div className="App">
       <Header />
       <TodoEditor onCreate={onCreate} />
-      <TodoList />
+      <TodoList todos={todos} onUpdate={onUpdate} onDelete={onDelete} />
     </div>
   );
 }

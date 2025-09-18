@@ -15,6 +15,11 @@ export default function TodoEditor({ onCreate }) {
     onCreate(content);
     setContent("");
   };
+  const onKeyDown = (e) => {
+    if (e.keyCode === 13) {
+      onSubmit();
+    }
+  };
 
   return (
     <div className="TodoEditor">
@@ -24,6 +29,7 @@ export default function TodoEditor({ onCreate }) {
           placeholder="새로운 Todo..."
           value={content}
           onChange={onChangeContent}
+          onKeyDown={onKeyDown}
         />
         <button onClick={onSubmit}>추가</button>
       </div>
