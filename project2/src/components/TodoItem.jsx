@@ -1,5 +1,6 @@
 import "./TodoItem.css";
-export default function TodoItem({
+import { memo } from "react";
+export default memo(function TodoItem({
   id,
   content,
   isDone,
@@ -13,6 +14,7 @@ export default function TodoItem({
   const onClickDelete = () => {
     onDelete(id);
   };
+  console.log("TodoItem 렌더링:", id);
   return (
     <div className="TodoItem">
       <div className="checkbox_col">
@@ -27,4 +29,4 @@ export default function TodoItem({
       </div>
     </div>
   );
-}
+});
