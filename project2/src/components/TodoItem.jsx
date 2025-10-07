@@ -1,20 +1,15 @@
 import "./TodoItem.css";
-import { memo } from "react";
-export default memo(function TodoItem({
-  id,
-  content,
-  isDone,
-  createdDate,
-  onUpdate,
-  onDelete,
-}) {
+import { memo, useContext } from "react";
+import { TodoDispatchContext } from "../App";
+export default memo(function TodoItem({ id, content, isDone, createdDate }) {
+  const { onUpdate, onDelete } = useContext(TodoDispatchContext);
   const onChangeCheckbox = () => {
     onUpdate(id);
   };
   const onClickDelete = () => {
     onDelete(id);
   };
-  console.log("TodoItem 렌더링:", id);
+  console.log("TodoItem 업데이트:", id);
   return (
     <div className="TodoItem">
       <div className="checkbox_col">

@@ -2,7 +2,14 @@ import Header from "./components/Header";
 import TodoEditor from "./components/TodoEditor";
 import TodoList from "./components/TodoList";
 import TestComp from "./components/TestComp";
-import { useState, useRef, useReducer, useCallback } from "react";
+import {
+  useState,
+  useRef,
+  useReducer,
+  useCallback,
+  createContext,
+  useMemo,
+} from "react";
 
 const mockTodos = [
   {
@@ -48,8 +55,9 @@ function reducer(state, action) {
       return state;
   }
 }
-function App() {
-  // const [todos, setTodos] = useState(mockTodos);
+export const TodoStateContext = createContext(null);
+export const TodoDispatchContext = createContext(null);
+export function App() {
   const idRef = useRef(4);
   const [todos, dispatch] = useReducer(reducer, mockTodos);
 
@@ -60,10 +68,9 @@ function App() {
         id: idRef.current,
         isDone: false,
         content,
-        createDate: new Date().getTime(),
+        createdDate: new Date().getTime(),
       },
     });
-    // setTodos([newTodo, ...todos]);
     idRef.current += 1;
   }, []);
 
@@ -73,33 +80,29 @@ function App() {
       type: "UPDATE",
       targetId,
     });
-    // setTodos(
-    //   todos.map((it) => {
-    //     return it.id === targetId
-    //       ? {
-    //           ...it,
-    //           isDone: !it.isDone,
-    //         }
-    //       : it;
-    //   })
-    // );
   }, []);
   const onDelete = useCallback((targetId) => {
-    // setTodos(todos.filter((it) => it.id !== targetId));
     dispatch({
       type: "DELETE",
       targetId,
     });
   }, []);
-
+  const memorizedDispatches = useMemo(() => {
+    return {
+      onCreate,
+      onUpdate,
+      onDelete,
+    };
+  }, []);
   return (
     <div className="App">
-      {/* <TestComp /> */}
       <Header />
-      <TodoEditor onCreate={onCreate} />
-      <TodoList todos={todos} onUpdate={onUpdate} onDelete={onDelete} />
+      <TodoStateContext.Provider value={todos}>
+        <TodoDispatchContext.Provider value={memorizedDispatches}>
+          <TodoEditor />
+          <TodoList />
+        </TodoDispatchContext.Provider>
+      </TodoStateContext.Provider>
     </div>
   );
 }
-
-export default App;
